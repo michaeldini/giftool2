@@ -1,11 +1,18 @@
 [project]
 name = "giftool2"
 version = "0.1.0"
-description = "Add your description here"
+description = "a simple tool to extract video to gif"
 readme = "README.md"
+authors = [{ name = "Michael Dini" }]
 requires-python = ">=3.12"
 dependencies = [
+    "ffmpeg-python>=0.2.0",
     "flask",
     "opencv-python",
     "pillow>=11.2.1",
 ]
+
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
