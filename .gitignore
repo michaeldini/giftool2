@@ -11,3 +11,6 @@ wheels/
 .vscode/
 *.DS_STORE
 settings.json
+*.gif
+**/uploads
+*.mp4

@@ -4,16 +4,37 @@ import io
 from PIL import Image
 import os
 import ffmpeg
+import uuid
+import time
+
+UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+CLEANUP_MAX_AGE = 60 * 60 * 6  # 6 hours in seconds
+
+def cleanup_old_uploads():
+    now = time.time()
+    for fname in os.listdir(UPLOAD_FOLDER):
+        fpath = os.path.join(UPLOAD_FOLDER, fname)
+        if os.path.isfile(fpath):
+            try:
+                if now - os.path.getmtime(fpath) > CLEANUP_MAX_AGE:
+                    os.remove(fpath)
+            except Exception:
+                pass
 
 app = Flask(__name__, static_folder='static')
 app.secret_key = 'dev'  # Needed for session
 
-
+@app.before_request
+def before_request_cleanup():
+    # Run cleanup on every request (lightweight for small folders)
+    cleanup_old_uploads()
 
 def get_video_path():
     return session.get('video_path')
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def index():
     # Minimal HTML/JS for frame navigation
     return render_template_string('''
@@ -127,10 +148,10 @@ input[type="range"] {
         <link rel="stylesheet" href="/static/style.css">
     </head>
     <body>
-        <form id="videoPathForm" method="post" action="/set_video_path" style="margin-bottom:20px;">
-            <label for="videoPath">Enter local video file path:</label>
-            <input type="text" id="videoPath" name="videoPath" style="width:340px;" required />
-            <button type="submit">Set Video</button>
+        <form id="uploadForm" method="post" enctype="multipart/form-data" action="/upload_video" style="margin-bottom:20px;">
+            <label for="videoFile">Upload video file:</label>
+            <input type="file" id="videoFile" name="videoFile" accept="video/*" required />
+            <button type="submit">Upload Video</button>
         </form>
         <div class="main-container">
             <h2>Video Frame Viewer</h2>
@@ -172,18 +193,17 @@ input[type="range"] {
             </div>
         </div>
         <script>
-        document.getElementById('videoPathForm').onsubmit = async function(e) {
+        document.getElementById('uploadForm').onsubmit = async function(e) {
             e.preventDefault();
-            const path = document.getElementById('videoPath').value;
-            let resp = await fetch('/set_video_path', {
+            const formData = new FormData(document.getElementById('uploadForm'));
+            let resp = await fetch('/upload_video', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({videoPath: path})
+                body: formData
             });
             if (resp.ok) {
                 location.reload();
             } else {
-                alert('Failed to set video path.');
+                alert('Failed to upload video.');
             }
         };
         let frame = 0;
@@ -251,14 +271,18 @@ input[type="range"] {
     </html>
     ''')
 
-@app.route('/set_video_path', methods=['POST'])
-def set_video_path():
-    data = request.get_json()
-    path = data.get('videoPath')
-    if not path or not os.path.isfile(path):
-        abort(400, 'Invalid file path')
+@app.route('/upload_video', methods=['POST'])
+def upload_video():
+    file = request.files.get('videoFile')
+    if not file:
+        abort(400, 'No file uploaded')
+    filename_raw = file.filename or ''
+    ext = os.path.splitext(filename_raw)[1] if '.' in filename_raw else ''
+    filename = f"{uuid.uuid4().hex}{ext}"
+    path = os.path.join(UPLOAD_FOLDER, filename)
+    file.save(path)
     session['video_path'] = path
-    return jsonify({'success': True})
+    return jsonify({'success': True, 'filename': filename})
 
 @app.route('/frame')
 def get_frame():
