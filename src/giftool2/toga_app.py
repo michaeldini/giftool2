@@ -30,6 +30,11 @@ class GifToolApp(toga.App):
         nav_box.add(self.seek_button)
         main_box.add(nav_box)
 
+        # Frame slider
+        self.frame_slider = toga.Slider(min=0, max=1, value=0, on_change=self.slider_changed, style=Pack(width=300, margin=5))
+        self.frame_slider.enabled = False
+        main_box.add(self.frame_slider)
+
         # GIF creation
         gif_box = toga.Box(style=Pack(direction="row", margin=5))
         self.length_input = toga.TextInput(style=Pack(width=80))
@@ -64,6 +69,17 @@ class GifToolApp(toga.App):
             cap.release()
             self.status_label.text = f"Loaded video with {self.frame_count} frames."
             self.frame_input.value = "0"
+            # Update slider min/max and enable it
+            if self.frame_count > 1:
+                self.frame_slider.min = 0
+                self.frame_slider.max = self.frame_count - 1
+                self.frame_slider.value = 0
+                self.frame_slider.enabled = True
+            else:
+                self.frame_slider.min = 0
+                self.frame_slider.max = 1
+                self.frame_slider.value = 0
+                self.frame_slider.enabled = False
             self.show_frame(0)
 
     def seek_frame(self, widget):
@@ -75,6 +91,17 @@ class GifToolApp(toga.App):
         except ValueError:
             self.status_label.text = "Invalid frame number."
             return
+        # Clamp value to slider range
+        frame_num = max(self.frame_slider.min, min(frame_num, self.frame_slider.max))
+        self.show_frame(frame_num)
+        # Sync slider with input
+        if self.frame_slider.enabled:
+            self.frame_slider.value = frame_num
+
+    def slider_changed(self, slider):
+        # Clamp value to slider range
+        frame_num = int(round(max(slider.min, min(slider.value, slider.max))))
+        self.frame_input.value = str(frame_num)
         self.show_frame(frame_num)
 
     def show_frame(self, frame_num):
@@ -89,10 +116,7 @@ class GifToolApp(toga.App):
             self.status_label.text = "Frame not found."
             return
         img = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
-        temp_path = os.path.join(os.path.dirname(__file__), f"current_frame_{uuid.uuid4().hex}.png")
-        img.save(temp_path)
-        self.current_frame_img_path = temp_path
-        self.image_view.image = toga.Image(temp_path)
+        self.image_view.image = toga.Image(img)
         self.status_label.text = f"Frame {frame_num} loaded."
 
     def create_gif(self, widget):

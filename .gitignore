@@ -14,3 +14,4 @@ settings.json
 *.gif
 **/uploads
 *.mp4
+**/*.png
