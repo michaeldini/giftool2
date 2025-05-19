@@ -1,18 +1,51 @@
 [project]
 name = "giftool2"
-version = "0.1.0"
+dynamic = ["version"]
+# version = "0.3.0"
 description = "a simple tool to extract video to gif"
 readme = "README.md"
+license = "MIT AND (Apache-2.0 OR BSD-2-Clause)"
+license-files = []
+keywords = ["gif", "video"]
 authors = [{ name = "Michael Dini" }]
-requires-python = ">=3.12"
+requires-python = ">=3.9"
 dependencies = [
     "ffmpeg-python>=0.2.0",
     "flask",
     "opencv-python",
     "pillow>=11.2.1",
 ]
+classifiers = [
+    # How mature is this project? Common values are
+    "Development Status :: 3 - Alpha",
+    # Indicate who your project is intended for
+    "Intended Audience :: Developers",
+    "Topic :: Multimedia :: Graphics :: Editors",
+    # Specify the Python versions you support here.
+    "Programming Language :: Python :: 3",
+    "Framework :: Flask",
+    "Framework :: Hatch",
+    "Intended Audience :: End Users/Desktop",
+]
 
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "uv-dynamic-versioning"]
 build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "uv-dynamic-versioning"
+
+[project.scripts]
+giftool2 = "giftool2.main:main"
+
+[[tool.uv.index]]
+name = "testpypi"
+url = "https://test.pypi.org/simple/"
+publish-url = "https://test.pypi.org/legacy/"
+explicit = true
+
+[[tool.uv.index]]
+name = "pypi"
+url = "https://pypi.org/simple/"
+explicit = true
