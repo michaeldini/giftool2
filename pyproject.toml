@@ -27,7 +27,7 @@ classifiers = [
     "Framework :: Hatch",
     "Intended Audience :: End Users/Desktop",
 ]
-[tool.uv-dynamic-versioning]
+
 
 [project.urls]
 Homepage = "https://github.com/michaeldini/giftool2"
@@ -39,6 +39,8 @@ build-backend = "hatchling.build"
 
 [tool.hatch.version]
 source = "uv-dynamic-versioning"
+
+[tool.uv-dynamic-versioning]
 fallback-version = "0.0.0"
 
 [project.scripts]
