@@ -359,4 +359,4 @@ def serve_gif(filename):
     return send_file(gif_path, mimetype='image/gif')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
