@@ -28,6 +28,9 @@ classifiers = [
     "Intended Audience :: End Users/Desktop",
 ]
 
+[project.urls]
+Homepage = "https://github.com/michaeldini/giftool2"
+Repository = "https://github.com/michaeldini/giftool2"
 
 [build-system]
 requires = ["hatchling", "uv-dynamic-versioning"]
