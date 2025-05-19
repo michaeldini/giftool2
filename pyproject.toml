@@ -13,8 +13,6 @@ dependencies = [
     "flask",
     "opencv-python",
     "pillow>=11.2.1",
-    "pyinstaller>=6.13.0",
-    "toga>=0.5.1",
 ]
 classifiers = [
     # How mature is this project? Common values are
@@ -51,3 +49,20 @@ explicit = true
 name = "pypi"
 url = "https://pypi.org/simple/"
 explicit = true
+
+[tool.briefcase]
+project_name = "giftool2"
+bundle = "com.example"
+version = "0.1.0"
+description = "A GIF tool built with Toga"
+author = "Your Name"
+author_email = "your@email.com"
+url = "https://github.com/yourname/giftool2"
+license = "MIT"
+requires = ["toga", "opencv-python==4.9.0.80", "pillow", "ffmpeg-python"]
+
+[tool.briefcase.app.giftool2]
+formal_name = "GIF Tool 2"
+description = "A GIF tool built with Toga"
+sources = ["src/giftool2"]
+entry_point = "giftool2.main:main"
