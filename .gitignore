@@ -8,6 +8,6 @@ wheels/
 
 # Virtual environments
 .venv
-
+.vscode/
 *.DS_STORE
 settings.json
