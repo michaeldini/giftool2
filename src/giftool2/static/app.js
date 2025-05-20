@@ -16,22 +16,23 @@ let frameCount = 0;
 let playInterval = null;
 
 function updateFrame() {
-    document.getElementById('frame').src = '/frame?i=' + frame + '&_=' + Date.now();
+    // Update the main preview (now startFrameImg)
+    document.getElementById('startFrameImg').src = '/frame?i=' + frame + '&_=' + Date.now();
     document.getElementById('frameInput').value = frame;
     document.getElementById('frameSlider').value = frame;
-    document.getElementById('frameLabel').innerText = 'Frame: ' + frame + ' / ' + (frameCount - 1);
-    updateStartEndFrames();
+    document.getElementById('frameLabel').innerText = ' / ' + (frameCount - 1);
+    updateEndFrame();
 }
-function updateStartEndFrames() {
+
+function updateEndFrame() {
     let lengthVal = parseInt(document.getElementById('gifLength').value);
     if (isNaN(lengthVal) || lengthVal <= 0) lengthVal = 90;
-    let startFrame = frame;
     let endFrame = Math.min(frame + lengthVal - 1, frameCount - 1);
-    document.getElementById('startFrameImg').src = '/frame?i=' + startFrame + '&_=' + Date.now();
     document.getElementById('endFrameImg').src = '/frame?i=' + endFrame + '&_=' + Date.now();
-    document.getElementById('startFrameLabel').innerText = 'Frame: ' + startFrame;
+    document.getElementById('startFrameLabel').innerText = 'Frame: ' + frame;
     document.getElementById('endFrameLabel').innerText = 'Frame: ' + endFrame;
 }
+
 function seek(df) {
     frame = Math.max(0, Math.min(frameCount - 1, frame + df));
     updateFrame();
@@ -93,5 +94,5 @@ function pauseFrames() {
         playInterval = null;
     }
 }
-document.getElementById('gifLength').addEventListener('input', updateStartEndFrames);
+document.getElementById('gifLength').addEventListener('input', updateEndFrame);
 getVideoInfo().then(updateFrame);
