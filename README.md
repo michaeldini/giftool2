@@ -4,11 +4,9 @@ A simple tool to create GIFs from videos.
 
 ## Features
 
-- Convert videos to GIFs
 - Upload a video file
 - Select a start and end time for the GIF
-- preview the start and end frames
-- Create and download the GIF
+- Convert video to GIF
 
 ## Usage
 

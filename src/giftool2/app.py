@@ -9,8 +9,8 @@ import time
 import hashlib
 
 UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 GIF_FOLDER = os.path.join(os.path.dirname(__file__), 'gifs')
 os.makedirs(GIF_FOLDER, exist_ok=True)
 
