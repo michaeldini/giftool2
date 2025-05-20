@@ -109,10 +109,10 @@ def create_gif():
         abort(400, 'Invalid length')
     start_time = start / fps
     duration = length / fps
-    gif_filename = f'gif_{start}.gif'
+    # gif_filename = f'gif_{start}.gif'
     # Use a hash of the video path to avoid collisions
     video_hash = hashlib.sha1(video_path.encode('utf-8')).hexdigest()[:10]
-    gif_filename = f'gif_{video_hash}_{start}.gif'
+    gif_filename = f'{video_hash}_{start}.gif'
     gif_path = os.path.join(GIF_FOLDER, gif_filename)
     vf_filters = 'fps=10,scale=360:-1:flags=lanczos'
     if brightness != 1.0:
@@ -136,6 +136,7 @@ def gifs_list():
         fpath = os.path.join(GIF_FOLDER, fname)
         if os.path.isfile(fpath):
             files.append(fname)
+    files.sort()
     return render_template('gif_list.html', gifs=files)
 
 @app.route('/gif/<path:filename>')
@@ -145,15 +146,28 @@ def serve_gif(filename):
         abort(404, 'GIF not found')
     return send_file(gif_path, mimetype='image/gif')
 
-# @app.route('/uploads_list')
-# def uploads_list():
-#     files = []
-#     for fname in os.listdir(UPLOAD_FOLDER):
-#         fpath = os.path.join(UPLOAD_FOLDER, fname)
-#         if os.path.isfile(fpath):
-#             files.append(fname)
-#     links = [f'<li><a href="/uploads/{fname}" target="_blank">{fname}</a></li>' for fname in files]
-#     return f"<h2>Uploaded Files</h2><ul>{''.join(links)}</ul>"
+@app.route('/delete_gif/<path:filename>', methods=['DELETE'])
+def delete_gif(filename):
+    gif_path = os.path.join(GIF_FOLDER, filename)
+    if not os.path.isfile(gif_path):
+        return jsonify({'error': 'File not found'}), 404
+    try:
+        os.remove(gif_path)
+        return jsonify({'success': True})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/export_gif/<path:filename>')
+def export_gif(filename):
+    gif_path = os.path.join(GIF_FOLDER, filename)
+    if not os.path.isfile(gif_path):
+        abort(404, 'GIF not found')
+    new_name = request.args.get('new_name', filename)
+    # Sanitize filename
+    new_name = os.path.basename(new_name)
+    if not new_name.lower().endswith('.gif'):
+        new_name += '.gif'
+    return send_file(gif_path, as_attachment=True, download_name=new_name)
 
 @app.route('/uploads/<path:filename>')
 def serve_upload(filename):
