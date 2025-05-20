@@ -15,7 +15,7 @@ body {
 nav {
     display: flex;
     /* align-items: start; */
-    background: linear-gradient(90deg, limegreen 20%, #012f01 100%);
+    background: linear-gradient(90deg, limegreen 90%, #012f01 100%);
     padding: 12px 20px;
     width: 100vw;
     box-sizing: border-box;

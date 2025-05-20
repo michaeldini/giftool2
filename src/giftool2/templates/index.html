@@ -9,9 +9,8 @@
     <div class="nav-container">
         <h1>Gif-tool2</h1>
         <form id="uploadForm" method="post" enctype="multipart/form-data" action="/upload_video">
-            <!-- <label for="videoFile">Upload video file:</label> -->
-            <input type="file" id="videoFile" name="videoFile" accept="video/*" required />
-            <button type="submit">Upload Video</button>
+            <input type="file" id="videoFile" name="videoFile" accept="video/*" required style="display:none;" />
+            <button type="button" id="uploadBtn">Upload Video</button>
         </form>
     </div>
 </nav>

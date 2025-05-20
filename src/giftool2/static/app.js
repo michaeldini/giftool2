@@ -1,16 +1,22 @@
-document.getElementById('uploadForm').onsubmit = async function (e) {
-    e.preventDefault();
-    const formData = new FormData(document.getElementById('uploadForm'));
-    let resp = await fetch('/upload_video', {
-        method: 'POST',
-        body: formData
-    });
-    if (resp.ok) {
-        location.reload();
-    } else {
-        alert('Failed to upload video.');
+document.getElementById('uploadBtn').onclick = function () {
+    document.getElementById('videoFile').click();
+};
+document.getElementById('videoFile').onchange = async function () {
+    if (this.files.length > 0) {
+        const formData = new FormData(document.getElementById('uploadForm'));
+        let resp = await fetch('/upload_video', {
+            method: 'POST',
+            body: formData
+        });
+        if (resp.ok) {
+            // Optionally, you can reload or update UI here
+            location.reload();
+        } else {
+            alert('Failed to upload video.');
+        }
     }
 };
+
 let frame = 0;
 let frameCount = 0;
 let playInterval = null;
