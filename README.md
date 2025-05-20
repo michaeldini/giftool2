@@ -1,5 +1,27 @@
 # giftool2
 
+A simple tool to create GIFs from videos.
+
+## Features
+
+- Convert videos to GIFs
+- Upload a video file
+- Select a start and end time for the GIF
+- preview the start and end frames
+- Create and download the GIF
+
+## Usage
+
+1. Installation: `pip install gif-tool2`
+
+2. Run the app:  `gif-tool2`
+
+## User Interface
+
+The app has a simple and intuitive user interface. You can upload a video file, select the start and end time for the GIF, and preview the start and end frames. Once you are satisfied with your selection, you can create and download the GIF.
+
+![img](./app-landing-page-800x600.jpg)
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE).

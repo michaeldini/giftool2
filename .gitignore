@@ -15,3 +15,5 @@ settings.json
 **/uploads
 *.mp4
 **/*.png
+app-landing-page.jpg
+**/gifs

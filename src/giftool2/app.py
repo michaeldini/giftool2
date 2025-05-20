@@ -10,6 +10,9 @@ import time
 UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+GIF_FOLDER = os.path.join(os.path.dirname(__file__), 'gifs')
+os.makedirs(GIF_FOLDER, exist_ok=True)
+
 CLEANUP_MAX_AGE = 60 * 60 * 6  # 6 hours in seconds
 
 def cleanup_old_uploads():
@@ -105,7 +108,8 @@ def create_gif():
         abort(400, 'Invalid length')
     start_time = start / fps
     duration = length / fps
-    gif_path = f'gif_{start}.gif'
+    gif_filename = f'gif_{start}.gif'
+    gif_path = os.path.join(GIF_FOLDER, gif_filename)
     vf_filters = 'fps=10,scale=360:-1:flags=lanczos'
     if brightness != 1.0:
         vf_filters += f',eq=brightness={brightness - 1.0}'
@@ -119,12 +123,11 @@ def create_gif():
         )
         .run(overwrite_output=True)
     )
-    return jsonify({'path': f'/gif/{gif_path}'})
+    return jsonify({'path': f'/gif/{gif_filename}'})
 
 @app.route('/gif/<path:filename>')
 def serve_gif(filename):
-    gif_dir = os.getcwd()  # or specify a directory if you want
-    gif_path = os.path.join(gif_dir, filename)
+    gif_path = os.path.join(GIF_FOLDER, filename)
     if not os.path.isfile(gif_path):
         abort(404, 'GIF not found')
     return send_file(gif_path, mimetype='image/gif')
