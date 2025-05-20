@@ -12,7 +12,7 @@ A simple tool to create GIFs from videos.
 
 ## Usage
 
-1. Installation: `pip install gif-tool2`
+1. Installation: `uv add gif-tool2` or  `pip install gif-tool2`
 
 2. Run the app:  `gif-tool2`
 
@@ -20,7 +20,7 @@ A simple tool to create GIFs from videos.
 
 The app has a simple and intuitive user interface. You can upload a video file, select the start and end time for the GIF, and preview the start and end frames. Once you are satisfied with your selection, you can create and download the GIF.
 
-![img](./app-landing-page-800x600.jpg)
+![img](./homepage800x600.jpg)
 
 ## License
 

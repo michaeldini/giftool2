@@ -6,6 +6,7 @@ import os
 import ffmpeg
 import uuid
 import time
+import hashlib
 
 UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -109,6 +110,9 @@ def create_gif():
     start_time = start / fps
     duration = length / fps
     gif_filename = f'gif_{start}.gif'
+    # Use a hash of the video path to avoid collisions
+    video_hash = hashlib.sha1(video_path.encode('utf-8')).hexdigest()[:10]
+    gif_filename = f'gif_{video_hash}_{start}.gif'
     gif_path = os.path.join(GIF_FOLDER, gif_filename)
     vf_filters = 'fps=10,scale=360:-1:flags=lanczos'
     if brightness != 1.0:
