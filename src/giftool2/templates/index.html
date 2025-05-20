@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Video Frame Viewer</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <form id="uploadForm" method="post" enctype="multipart/form-data" action="/upload_video"
+        style="margin-bottom:20px;">
+        <label for="videoFile">Upload video file:</label>
+        <input type="file" id="videoFile" name="videoFile" accept="video/*" required />
+        <button type="submit">Upload Video</button>
+    </form>
+    <div class="main-container">
+        <h2>Video Frame Viewer</h2>
+        <img id="frame" width="480" style="display:block;" />
+        <div class="button-row">
+            <button onclick="seek(-1)">-1</button>
+            <button onclick="seek(-2)">-2</button>
+            <button onclick="seek(-4)">-4</button>
+            <button onclick="seek(-8)">-8</button>
+            <button onclick="seek(-16)">-16</button>
+            <button onclick="seek(-32)">-32</button>
+            <button onclick="seek(-64)">-64</button>
+            <button onclick="seek(-128)">-128</button>
+        </div>
+        <div class="button-row">
+            <button onclick="seek(1)">+1</button>
+            <button onclick="seek(2)">+2</button>
+            <button onclick="seek(4)">+4</button>
+            <button onclick="seek(8)">+8</button>
+            <button onclick="seek(16)">+16</button>
+            <button onclick="seek(32)">+32</button>
+            <button onclick="seek(64)">+64</button>
+            <button onclick="seek(128)">+128</button>
+        </div>
+        <div class="button-row" style="margin-top:8px;">
+            <input type="number" id="frameInput" value="0" step="1" min="0" style="width:60px;" onchange="setFrame()" />
+            <button id="playBtn" onclick="playFrames(); return false;">Play</button>
+            <button id="pauseBtn" onclick="pauseFrames(); return false;">Pause</button>
+        </div>
+        <div class="range-row">
+            <input type="range" id="frameSlider" min="0" max="0" value="0" step="1" style="width:480px;"
+                onchange="sliderSeek()" />
+            <span id="frameLabel"></span>
+        </div>
+        <div class="gif-row">
+            <button onclick="createGif()">Create GIF from current frame</button>
+            <span>Length (frames):</span>
+            <input type="number" id="gifLength" value="90" min="1" step="1" style="width:60px;" />
+            <span>Brightness:</span>
+            <input type="number" id="brightnessInput" value="1.0" min="0.5" max="1.5" step="0.05" style="width:60px;" />
+            <span id="gifStatus"></span>
+        </div>
+        <div class="gif-row" style="margin-top:28px;">
+            <div style="text-align:center;">
+                <div>Start Frame</div>
+                <img id="startFrameImg" width="240" />
+                <div id="startFrameLabel"></div>
+            </div>
+            <div style="text-align:center;">
+                <div>End Frame</div>
+                <img id="endFrameImg" width="240" />
+                <div id="endFrameLabel"></div>
+            </div>
+        </div>
+    </div>
+    <script src="/static/app.js"></script>
+</body>
+
+</html>
