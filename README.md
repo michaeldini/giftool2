@@ -12,9 +12,11 @@ A simple tool to create GIFs from videos.
 
 ## Usage
 
-1. Installation: `uv add gif-tool2` or  `pip install gif-tool2`
+1. Installation: `uv add giftool2` or  `pip install giftool2`
 
-2. Run the app:  `gif-tool2`
+2. Run the app:  `giftool2`
+
+3. Navigate to the app in your web browser. The default URL is `http://127.0.0.1:5000`.
 
 ## User Interface
 
