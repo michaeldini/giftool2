@@ -3,7 +3,7 @@ body {
     background: #181a1b;
     color: #e0e0e0;
     margin: 0;
-    padding: 30px;
+    padding-top: 30px;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -14,8 +14,8 @@ body {
 
 nav {
     display: flex;
-    /* align-items: start; */
-    background: linear-gradient(90deg, limegreen 90%, #012f01 100%);
+    align-items: start;
+    background: linear-gradient(90deg, limegreen 20%, #026202 60%);
     padding: 12px 20px;
     width: 100vw;
     box-sizing: border-box;
@@ -42,6 +42,16 @@ nav button {
     font-size: 1em;
     margin: 10px 10px;
 
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #e0e0e0;
+    font-size: 1.2em;
+    padding: 8px 12px;
+    border-radius: 4px;
+    background: #23272a;
+    transition: background 0.2s, color 0.2s;
 }
 
 .main-container {
@@ -271,7 +281,7 @@ input[type="range"]:focus {
     gap: 24px;
     color: #111;
     font-size: 1.2em;
-    width: 80%;
+    /* width: 80%; */
 
 }
 
@@ -319,4 +329,58 @@ input[type="range"]:focus {
 
 span {
     font-size: 1.2em;
+}
+
+.gif-list-container {
+    min-width: 260px;
+    background: #23272a;
+    border-radius: 8px;
+    padding: 18px 18px 18px 18px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+#gif-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#gif-list li {
+    margin-bottom: 10px;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+#gif-list li a {
+    display: block;
+    padding: 8px 14px;
+    color: #b3e283;
+    text-decoration: none;
+    font-size: 1.1em;
+    border-radius: 4px;
+    background: #181a1b;
+    transition: background 0.2s, color 0.2s;
+}
+
+#gif-list li a:hover,
+#gif-list li a.active {
+    background: limegreen;
+    color: #181a1b;
+    font-weight: bold;
+}
+
+#gif-viewer {
+    min-width: 600px;
+    background: #23272a;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+    padding: 24px 18px;
+    margin-left: 0;
+    position: sticky;
+    top: 32px;
+    align-self: flex-start;
+    height: fit-content;
+    z-index: 2;
 }

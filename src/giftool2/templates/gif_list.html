@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>GIF List</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <nav>
+        <div class="nav-container">
+            <button onclick="window.location.href='/'" style="font-size:1.2em;">&larr; Back</button>
+            <h1 style="margin-left: 24px;">Your GIFs</h1>
+        </div>
+    </nav>
+    <main style="margin-top: 32px; display: flex; flex-direction: row; align-items: flex-start; gap: 48px;">
+        <div class="gif-list-container">
+            <h2>GIF Files</h2>
+            <ul id="gif-list">
+                {% for fname in gifs %}
+                <li><a href="#" onclick="showGif('{{ fname }}', this); return false;">{{ fname }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div id="gif-viewer"></div>
+    </main>
+    <script>
+        function showGif(fname, el) {
+            const viewer = document.getElementById('gif-viewer');
+            viewer.innerHTML = `<img src="/gif/${fname}" style="max-width:600px; max-height:400px; border:2px solid limegreen; background:#23272a; border-radius:8px;" alt="GIF">`;
+            // Highlight selected link
+            document.querySelectorAll('#gif-list a').forEach(a => a.classList.remove('active'));
+            if (el) el.classList.add('active');
+        }
+    </script>
+</body>
+
+</html>

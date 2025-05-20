@@ -8,13 +8,16 @@ import uuid
 import time
 import hashlib
 
-UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
-
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 GIF_FOLDER = os.path.join(os.path.dirname(__file__), 'gifs')
 os.makedirs(GIF_FOLDER, exist_ok=True)
 
-CLEANUP_MAX_AGE = 60 * 60 * 6  # 6 hours in seconds
+app = Flask(__name__, static_folder='static', template_folder='templates')
+app.secret_key = 'dev'  # Needed for session
+
+UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+CLEANUP_MAX_AGE = 60 * 60 * 2  # 2 hours in seconds
+
 
 def cleanup_old_uploads():
     now = time.time()
@@ -26,9 +29,6 @@ def cleanup_old_uploads():
                     os.remove(fpath)
             except Exception:
                 pass
-
-app = Flask(__name__, static_folder='static', template_folder='templates')
-app.secret_key = 'dev'  # Needed for session
 
 @app.before_request
 def before_request_cleanup():
@@ -129,12 +129,38 @@ def create_gif():
     )
     return jsonify({'path': f'/gif/{gif_filename}'})
 
+@app.route('/gifs_list')
+def gifs_list():
+    files = []
+    for fname in os.listdir(GIF_FOLDER):
+        fpath = os.path.join(GIF_FOLDER, fname)
+        if os.path.isfile(fpath):
+            files.append(fname)
+    return render_template('gif_list.html', gifs=files)
+
 @app.route('/gif/<path:filename>')
 def serve_gif(filename):
     gif_path = os.path.join(GIF_FOLDER, filename)
     if not os.path.isfile(gif_path):
         abort(404, 'GIF not found')
     return send_file(gif_path, mimetype='image/gif')
+
+# @app.route('/uploads_list')
+# def uploads_list():
+#     files = []
+#     for fname in os.listdir(UPLOAD_FOLDER):
+#         fpath = os.path.join(UPLOAD_FOLDER, fname)
+#         if os.path.isfile(fpath):
+#             files.append(fname)
+#     links = [f'<li><a href="/uploads/{fname}" target="_blank">{fname}</a></li>' for fname in files]
+#     return f"<h2>Uploaded Files</h2><ul>{''.join(links)}</ul>"
+
+@app.route('/uploads/<path:filename>')
+def serve_upload(filename):
+    file_path = os.path.join(UPLOAD_FOLDER, filename)
+    if not os.path.isfile(file_path):
+        abort(404, 'File not found')
+    return send_file(file_path, as_attachment=False)
 
 if __name__ == '__main__':
     app.run(debug=True)
