@@ -95,26 +95,26 @@ def create_gif():
     start = int(request.args.get('start', 0))
     length = int(request.args.get('length', 90))
     brightness = float(request.args.get('brightness', 1.0))
+    fps = float(request.args.get('fps', 10))  # Default to 10 if not provided
+    scale = request.args.get('scale', '360:-1')  # Default to 360px wide, keep aspect
     cap = cv2.VideoCapture(video_path)
     if not cap.isOpened():
         abort(404, 'Video not found')
-    fps = cap.get(cv2.CAP_PROP_FPS)
+    video_fps = cap.get(cv2.CAP_PROP_FPS)
     frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     cap.release()
-    if fps <= 0:
+    if video_fps <= 0:
         abort(500, 'Invalid FPS')
     if start < 0 or start >= frame_count:
         abort(400, 'Invalid start frame')
     if length <= 0:
         abort(400, 'Invalid length')
-    start_time = start / fps
-    duration = length / fps
-    # gif_filename = f'gif_{start}.gif'
-    # Use a hash of the video path to avoid collisions
+    start_time = start / video_fps
+    duration = length / video_fps
     video_hash = hashlib.sha1(video_path.encode('utf-8')).hexdigest()[:10]
     gif_filename = f'{video_hash}_{start}.gif'
     gif_path = os.path.join(GIF_FOLDER, gif_filename)
-    vf_filters = 'fps=10,scale=360:-1:flags=lanczos'
+    vf_filters = f'fps={fps},scale={scale}:-1:flags=lanczos'
     if brightness != 1.0:
         vf_filters += f',eq=brightness={brightness - 1.0}'
     (

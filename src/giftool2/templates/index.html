@@ -75,6 +75,10 @@
             <input type="number" id="gifLength" value="90" min="1" step="1" />
             <span>Brightness:</span>
             <input type="number" id="brightnessInput" value="1.0" min="0.5" max="1.5" step="0.05" />
+            <span>FPS:</span>
+            <input type="number" id="fpsInput" value="10" min="1" max="30" step="1" style="width:70px;" />
+            <span>Scale:</span>
+            <input type="text" id="scaleInput" value="360" style="width:90px;" />
         </div>
         <span class="line-break"></span>
 
@@ -84,6 +88,27 @@
         </div>
     </div>
     <script src="/static/app.js"></script>
+    <script>
+        function createGif() {
+            const start = parseInt(document.getElementById('frameInput').value) || 0;
+            const length = parseInt(document.getElementById('gifLength').value) || 90;
+            const brightness = parseFloat(document.getElementById('brightnessInput').value) || 1.0;
+            const fps = parseFloat(document.getElementById('fpsInput').value) || 10;
+            const scale = document.getElementById('scaleInput').value || '360:-1';
+            const status = document.getElementById('gifStatus');
+            status.textContent = 'Creating...';
+            fetch(`/create_gif?start=${start}&length=${length}&brightness=${brightness}&fps=${fps}&scale=${encodeURIComponent(scale)}`, { method: 'POST' })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.path) {
+                        status.innerHTML = `<a href="${data.path}" target="_blank">View GIF</a>`;
+                    } else {
+                        status.textContent = 'Error creating GIF.';
+                    }
+                })
+                .catch(() => status.textContent = 'Error creating GIF.');
+        }
+    </script>
 </body>
 
 </html>
