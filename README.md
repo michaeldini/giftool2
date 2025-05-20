@@ -20,7 +20,7 @@ A simple tool to create GIFs from videos.
 
 The app has a simple and intuitive user interface. You can upload a video file, select the start and end time for the GIF, and preview the start and end frames. Once you are satisfied with your selection, you can create and download the GIF.
 
-![./homepage800x600.jpg](https://github.com/michaeldini/giftool2/blob/0f6ed9d3fb67ce9fc881f688551e950a1853312b/homepage800x600.jpg)
+![App Screenshot](https://raw.githubusercontent.com/michaeldini/giftool2/main/homepage800x600.jpg)
 
 ## License
 
