@@ -8,9 +8,8 @@
 <nav>
     <div class="nav-container">
         <h1>Gif-tool2</h1>
-        <form id="uploadForm" method="post" enctype="multipart/form-data" action="/upload_video"
-            style="margin-bottom:20px;">
-            <label for="videoFile">Upload video file:</label>
+        <form id="uploadForm" method="post" enctype="multipart/form-data" action="/upload_video">
+            <!-- <label for="videoFile">Upload video file:</label> -->
             <input type="file" id="videoFile" name="videoFile" accept="video/*" required />
             <button type="submit">Upload Video</button>
         </form>
@@ -35,7 +34,7 @@
             <span style="display: inline-block; vertical-align: middle; margin-right: 12px;">
                 <h3 style="display: inline; margin: 0;">Select a Starting Frame</h3>
             </span>
-            <input type="number" id="frameInput" value="0" step="1" min="0" style="width:60px" onchange="setFrame()" />
+            <input type="number" id="frameInput" value="0" step="1" min="0" onchange="setFrame()" />
             <span id="frameLabel"></span>
             <button id="playBtn" onclick="playFrames(); return false;">Play</button>
             <button id="pauseBtn" onclick="pauseFrames(); return false;">Pause</button>
@@ -73,9 +72,9 @@
         <span class="line-break"></span>
         <div class="extra-controls-row">
             <span>Length (frames):</span>
-            <input type="number" id="gifLength" value="90" min="1" step="1" style="width:60px;" />
+            <input type="number" id="gifLength" value="90" min="1" step="1" />
             <span>Brightness:</span>
-            <input type="number" id="brightnessInput" value="1.0" min="0.5" max="1.5" step="0.05" style="width:60px;" />
+            <input type="number" id="brightnessInput" value="1.0" min="0.5" max="1.5" step="0.05" />
         </div>
         <span class="line-break"></span>
 

@@ -39,8 +39,9 @@ nav h1 {
 }
 
 nav button {
-    margin: 0;
     font-size: 1em;
+    margin: 10px 10px;
+
 }
 
 .main-container {
@@ -180,6 +181,7 @@ button:hover {
     color: #fff;
 }
 
+
 input[type="number"],
 input[type="range"] {
     margin: 0 4px;
@@ -189,6 +191,10 @@ input[type="range"] {
     padding: 2px 6px;
     background: #23272a;
     color: #e0e0e0;
+}
+
+input[type="number"] {
+    width: 80px;
 }
 
 input[type="range"] {
@@ -265,11 +271,24 @@ input[type="range"]:focus {
     gap: 24px;
     color: #111;
     font-size: 1.2em;
+    width: 80%;
+
 }
 
 #uploadForm label,
 #uploadForm input[type="file"] {
     font-size: 1em;
+    width: 100%;
+}
+
+#videoFile {
+    width: fit-content;
+    margin: 10px 10px;
+    padding: 4px;
+    border: 1px solid #444;
+    background: #23272a;
+    color: #e0e0e0;
+    border-radius: 4px;
 }
 
 #frame,
@@ -295,5 +314,9 @@ input[type="range"]:focus {
 
 .gif-row button {
     border: 1px solid limegreen;
+    font-size: 1.2em;
+}
+
+span {
     font-size: 1.2em;
 }
