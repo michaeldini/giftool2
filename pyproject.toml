@@ -1,6 +1,6 @@
 [project]
 name = "giftool2"
-version = "0.17.0"
+version = "0.18.0"
 description = "a simple tool to extract video to gif"
 readme = "README.md"
 license = "MIT AND (Apache-2.0 OR BSD-2-Clause)"
