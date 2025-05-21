@@ -8,13 +8,13 @@ import uuid
 import time
 import hashlib
 
-GIF_FOLDER = os.path.join(os.path.expanduser('~'), '.myapp_gifs')
+GIF_FOLDER = os.path.join(os.path.expanduser('~'), '.giftool2_gifs')
 os.makedirs(GIF_FOLDER, exist_ok=True)
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
 app.secret_key = 'dev'  # Needed for session
 
-UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
+UPLOAD_FOLDER = os.path.join(os.path.expanduser('~'), '.giftool2_uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 CLEANUP_MAX_AGE = 60 * 60 * 2  # 2 hours in seconds
 
