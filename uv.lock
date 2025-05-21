@@ -160,7 +160,7 @@ wheels = [
 
 [[package]]
 name = "giftool2"
-version = "0.16.0"
+version = "0.18.0"
 source = { editable = "." }
 dependencies = [
     { name = "ffmpeg-python" },

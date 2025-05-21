@@ -133,9 +133,10 @@ def create_gif():
 def gifs_list():
     files = []
     for fname in os.listdir(GIF_FOLDER):
-        fpath = os.path.join(GIF_FOLDER, fname)
-        if os.path.isfile(fpath):
-            files.append(fname)
+        if fname.lower().endswith('.gif'):
+            fpath = os.path.join(GIF_FOLDER, fname)
+            if os.path.isfile(fpath):
+                files.append(fname)
     files.sort()
     return render_template('gif_list.html', gifs=files)
 
