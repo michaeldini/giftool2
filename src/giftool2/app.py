@@ -8,7 +8,7 @@ import uuid
 import time
 import hashlib
 
-GIF_FOLDER = os.path.join(os.path.dirname(__file__), 'gifs')
+GIF_FOLDER = os.path.join(os.path.expanduser('~'), '.myapp_gifs')
 os.makedirs(GIF_FOLDER, exist_ok=True)
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
