@@ -3,33 +3,28 @@ import cv2
 import io
 from PIL import Image
 import os
-import ffmpeg
 import uuid
-import time
 import hashlib
-
-GIF_FOLDER = os.path.join(os.path.expanduser('~'), '.giftool2_gifs')
-os.makedirs(GIF_FOLDER, exist_ok=True)
-
-UPLOAD_FOLDER = os.path.join(os.path.expanduser('~'), '.giftool2_uploads')
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+from .main import create_gif_with_ffmpeg
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
 app.secret_key = 'dev'  # Needed for session
+app.config['GIF_FOLDER'] = os.path.join(os.path.expanduser('~'), '.giftool2_gifs')
+os.makedirs(app.config['GIF_FOLDER'], exist_ok=True)
+app.config['UPLOAD_FOLDER'] = os.path.join(os.path.expanduser('~'), '.giftool2_uploads')
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 def cleanup_old_uploads():
-    for fname in os.listdir(UPLOAD_FOLDER):
-        fpath = os.path.join(UPLOAD_FOLDER, fname)
+    upload_folder = app.config['UPLOAD_FOLDER']
+    for fname in os.listdir(upload_folder):
+        fpath = os.path.join(upload_folder, fname)
         if os.path.isfile(fpath):
             try:
                 os.remove(fpath)
             except Exception:
                 pass
-
-@app.before_request
-def before_request_cleanup():
-    # Run cleanup on every request (lightweight for small folders)
-    cleanup_old_uploads()
+# Run cleanup once on startup
+cleanup_old_uploads()
 
 def get_video_path():
     return session.get('video_path')
@@ -46,7 +41,7 @@ def upload_video():
     filename_raw = file.filename or ''
     ext = os.path.splitext(filename_raw)[1] if '.' in filename_raw else ''
     filename = f"{uuid.uuid4().hex}{ext}"
-    path = os.path.join(UPLOAD_FOLDER, filename)
+    path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     file.save(path)
     session['video_path'] = path
     return jsonify({'success': True, 'filename': filename})
@@ -109,28 +104,26 @@ def create_gif():
     duration = length / video_fps
     video_hash = hashlib.sha1(video_path.encode('utf-8')).hexdigest()[:10]
     gif_filename = f'{video_hash}_{start}.gif'
-    gif_path = os.path.join(GIF_FOLDER, gif_filename)
-    vf_filters = f'fps={fps},scale={scale}:-1:flags=lanczos'
-    if brightness != 1.0:
-        vf_filters += f',eq=brightness={brightness - 1.0}'
-    (
-        ffmpeg
-        .input(video_path, ss=start_time, t=duration)
-        .output(
-            gif_path,
-            vf=f'{vf_filters},split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse',
-            loop=0
-        )
-        .run(overwrite_output=True)
+    gif_path = os.path.join(app.config['GIF_FOLDER'], gif_filename)
+    # Use the new helper for ffmpeg logic
+    create_gif_with_ffmpeg(
+        video_path=video_path,
+        gif_path=gif_path,
+        start_time=start_time,
+        duration=duration,
+        video_fps=video_fps,
+        fps=fps,
+        scale=scale,
+        brightness=brightness
     )
     return jsonify({'path': f'/gif/{gif_filename}'})
 
 @app.route('/gifs_list')
 def gifs_list():
     files = []
-    for fname in os.listdir(GIF_FOLDER):
+    for fname in os.listdir(app.config['GIF_FOLDER']):
         if fname.lower().endswith('.gif'):
-            fpath = os.path.join(GIF_FOLDER, fname)
+            fpath = os.path.join(app.config['GIF_FOLDER'], fname)
             if os.path.isfile(fpath):
                 files.append(fname)
     files.sort()
@@ -138,14 +131,14 @@ def gifs_list():
 
 @app.route('/gif/<path:filename>')
 def serve_gif(filename):
-    gif_path = os.path.join(GIF_FOLDER, filename)
+    gif_path = os.path.join(app.config['GIF_FOLDER'], filename)
     if not os.path.isfile(gif_path):
         abort(404, 'GIF not found')
     return send_file(gif_path, mimetype='image/gif')
 
 @app.route('/delete_gif/<path:filename>', methods=['DELETE'])
 def delete_gif(filename):
-    gif_path = os.path.join(GIF_FOLDER, filename)
+    gif_path = os.path.join(app.config['GIF_FOLDER'], filename)
     if not os.path.isfile(gif_path):
         return jsonify({'error': 'File not found'}), 404
     try:
@@ -156,7 +149,7 @@ def delete_gif(filename):
 
 @app.route('/export_gif/<path:filename>')
 def export_gif(filename):
-    gif_path = os.path.join(GIF_FOLDER, filename)
+    gif_path = os.path.join(app.config['GIF_FOLDER'], filename)
     if not os.path.isfile(gif_path):
         abort(404, 'GIF not found')
     new_name = request.args.get('new_name', filename)
@@ -168,7 +161,7 @@ def export_gif(filename):
 
 @app.route('/uploads/<path:filename>')
 def serve_upload(filename):
-    file_path = os.path.join(UPLOAD_FOLDER, filename)
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     if not os.path.isfile(file_path):
         abort(404, 'File not found')
     return send_file(file_path, as_attachment=False)
