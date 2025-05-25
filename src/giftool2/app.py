@@ -11,9 +11,7 @@ app = Flask(__name__, static_folder='static', template_folder='templates')
 app.secret_key = 'dev'  # Needed for session
 # Use cross-platform safe folder names (no leading dot)
 user_home = os.path.expanduser('~')
-# Prefer Documents if it exists, else fallback to home
-user_docs = os.path.join(user_home, 'Documents')
-base_dir = user_docs if os.path.isdir(user_docs) else user_home
+base_dir = user_home  # Always use home directory, not Documents
 app.config['GIF_FOLDER'] = os.path.join(base_dir, 'giftool2_gifs')
 os.makedirs(app.config['GIF_FOLDER'], exist_ok=True)
 app.config['UPLOAD_FOLDER'] = os.path.join(base_dir, 'giftool2_uploads')
