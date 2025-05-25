@@ -9,9 +9,14 @@ from .main import create_gif_with_ffmpeg
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
 app.secret_key = 'dev'  # Needed for session
-app.config['GIF_FOLDER'] = os.path.join(os.path.expanduser('~'), '.giftool2_gifs')
+# Use cross-platform safe folder names (no leading dot)
+user_home = os.path.expanduser('~')
+# Prefer Documents if it exists, else fallback to home
+user_docs = os.path.join(user_home, 'Documents')
+base_dir = user_docs if os.path.isdir(user_docs) else user_home
+app.config['GIF_FOLDER'] = os.path.join(base_dir, 'giftool2_gifs')
 os.makedirs(app.config['GIF_FOLDER'], exist_ok=True)
-app.config['UPLOAD_FOLDER'] = os.path.join(os.path.expanduser('~'), '.giftool2_uploads')
+app.config['UPLOAD_FOLDER'] = os.path.join(base_dir, 'giftool2_uploads')
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 def cleanup_old_uploads():
@@ -122,7 +127,7 @@ def create_gif():
 def gifs_list():
     files = []
     for fname in os.listdir(app.config['GIF_FOLDER']):
-        if fname.lower().endswith('.gif'):
+        if fname.lower().endswith('.gif') and not fname.startswith('.'):
             fpath = os.path.join(app.config['GIF_FOLDER'], fname)
             if os.path.isfile(fpath):
                 files.append(fname)
